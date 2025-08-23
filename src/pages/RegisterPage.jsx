@@ -1,42 +1,30 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 
-const RegisterPage = () => {
-  const navigate = useNavigate();
+import RegisterFooter from "@/components/register_components/RegisterFooter";
+import RegisterForm from "@/components/register_components/RegisterForm";
+import RegisterHeader from "@/components/register_components/RegisterHeader";
 
-  const handleRegister = async (event) => {
-    event.preventDefault();
-    // Here you would make an API call to register the user
-
-    try {
-      // --- FAKE API CALL ---
-      const fakeApiCall = new Promise((resolve) => {
-        setTimeout(() => resolve({ success: true }), 1000);
-      });
-
-      await fakeApiCall;
-
-      // 1. Show a success toast
-      toast.success("Account created successfully! Please log in.");
-
-      // 2. Navigate to the login page
-      navigate("/login");
-    } catch (e) {
-      toast.error(`Registration failed. Please try again. ${e}`);
-    }
-  };
-
+export default function RegisterPage() {
   return (
-    <div>
-      <h1>Create Account</h1>
-      <form onSubmit={handleRegister}>
-        {/* Your registration form fields go here */}
-        <button type="submit">Create Account</button>
-      </form>
-      <Link to="/login">Already have an account? Sign In</Link>
+    <div className="bg-muted w-full h-screen grid place-items-center">
+      <div className="bg-card w-full flex h-screen">
+        <div className=" overflow-y-auto w-full flex justify-center items-start">
+          <div className="flex flex-col gap-4 w-3/5 py-12 ">
+            <RegisterHeader />
+            <RegisterForm />
+            <RegisterFooter />
+          </div>
+        </div>
+        <div className="bg-muted  relative hidden w-full md:block">
+          <img
+            className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+            src="/placeholder.svg"
+            alt=" "
+            width={100}
+            height={100}
+          />
+        </div>
+      </div>
     </div>
   );
-};
-
-export default RegisterPage;
+}
