@@ -11,7 +11,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-function formatDate(date) {
+interface DatePickerProps {
+  value?: Date;
+  onChange: (date?: Date) => void;
+}
+
+function formatDate(date: Date | undefined) {
   if (!date) {
     return "";
   }
@@ -23,32 +28,37 @@ function formatDate(date) {
   });
 }
 
-function isValidDate(date) {
+function isValidDate(date: Date | undefined) {
   if (!date) {
     return false;
   }
   return !isNaN(date.getTime());
 }
 
-export function DatePicker() {
+export function DatePicker({ value, onChange }: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
-  const [date, setDate] = React.useState(undefined);
-  const [month, setMonth] = React.useState(date);
-  const [value, setValue] = React.useState(formatDate(date));
+  const [date, setDate] = React.useState<Date | undefined>(undefined);
+  const [month, setMonth] = React.useState<Date | undefined>(date);
+  const [inputValue, setInputValue] = React.useState(formatDate(value));
+
+  React.useEffect(() => {
+    setInputValue(formatDate(value));
+  }, [value]);
 
   return (
     <div className="relative flex gap-2">
       <Input
-        id="birthdate"
-        value={value}
+        // Register the input
+        id="date"
+        value={inputValue}
         placeholder="June 01, 2025"
         className="bg-background pr-10"
         onChange={(e) => {
-          const date = new Date(e.target.value);
-          setValue(e.target.value);
-          if (isValidDate(date)) {
-            setDate(date);
-            setMonth(date);
+          setInputValue(e.target.value);
+          const parsedDate = new Date(e.target.value);
+          // If the typed date is valid, update the form state
+          if (!isNaN(parsedDate.getTime())) {
+            onChange(parsedDate);
           }
         }}
         onKeyDown={(e) => {
@@ -77,13 +87,12 @@ export function DatePicker() {
         >
           <Calendar
             mode="single"
-            selected={date}
+            selected={value} // Use the value prop here
             captionLayout="dropdown"
             month={month}
             onMonthChange={setMonth}
             onSelect={(date) => {
-              setDate(date);
-              setValue(formatDate(date));
+              onChange(date); // Call the onChange prop from react-hook-form
               setOpen(false);
             }}
           />

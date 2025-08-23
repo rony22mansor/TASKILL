@@ -3,6 +3,7 @@ import React from "react";
 import RegisterFooter from "@/components/register_components/RegisterFooter";
 import RegisterForm from "@/components/register_components/RegisterForm";
 import RegisterHeader from "@/components/register_components/RegisterHeader";
+import ImageSlider from "@/components/ImageSlider";
 
 export default function RegisterPage() {
   return (
@@ -16,13 +17,7 @@ export default function RegisterPage() {
           </div>
         </div>
         <div className="bg-muted  relative hidden w-full md:block">
-          <img
-            className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-            src="/placeholder.svg"
-            alt=" "
-            width={100}
-            height={100}
-          />
+          <ImageSlider />
         </div>
       </div>
     </div>
