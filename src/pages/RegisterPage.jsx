@@ -8,7 +8,7 @@ import ImageSlider from "@/components/ImageSlider";
 export default function RegisterPage() {
   return (
     <div className="bg-muted w-full h-screen grid place-items-center">
-      <div className="bg-card w-full flex h-screen">
+      <div className="bg-background w-full flex h-screen">
         <div className=" overflow-y-auto w-full flex justify-center items-start">
           <div className="flex flex-col gap-4 w-3/5 py-12 ">
             <RegisterHeader />
@@ -16,7 +16,7 @@ export default function RegisterPage() {
             <RegisterFooter />
           </div>
         </div>
-        <div className="bg-muted  relative hidden w-full md:block">
+        <div className=" bg-muted rounded-4xl m-6 relative hidden w-full md:block">
           <ImageSlider />
         </div>
       </div>
