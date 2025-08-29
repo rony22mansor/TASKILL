@@ -28,11 +28,9 @@ export const registerSchema = z
       .number()
       .min(0, { message: "Available hours cannot be negative." }),
 
-    phone_number: z
-      .string()
-      .regex(/^09\d{8}$/, {
-        message: "Please enter a valid 10-digit phone number starting with 09.",
-      }),
+    phone_number: z.string().regex(/^09\d{8}$/, {
+      message: "Please enter a valid 10-digit phone number starting with 09.",
+    }),
     address: z
       .string()
       .min(5, { message: "Address must be at least 5 characters." }),
@@ -45,3 +43,12 @@ export const registerSchema = z
     message: "Passwords do not match.",
     path: ["confirmPassword"],
   });
+
+export const taskDescriptionSchema = z.object({
+  description: z
+    .string()
+    .min(10, {
+      message: "Task description must be at least 10 characters long.",
+    })
+    .max(500, { message: "Description cannot exceed 500 characters." }),
+});

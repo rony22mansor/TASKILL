@@ -2,9 +2,9 @@ import React from "react";
 import { Button } from "./ui/button";
 
 type NavButtonProps = {
-  key?: string;
+  dkey?: string;
   isSidebarCollapsed: boolean;
-  setActivePage: (string) => void;
+  onNavigate: (string) => void;
   item: {
     name: string;
     icon: any;
@@ -14,17 +14,17 @@ type NavButtonProps = {
 
 export default function NavButton({
   isSidebarCollapsed,
-  setActivePage,
+  onNavigate,
   item,
-  key,
+  dkey,
   activePage,
 }: NavButtonProps) {
   return (
     <Button
       size={isSidebarCollapsed ? "icon" : "default"}
-      key={key}
+      key={dkey}
       onClick={() => {
-        setActivePage(item.name);
+        onNavigate(item.name);
       }}
       className={`shadow-none flex items-center gap-3 px-3 py-2 bg-transparent transition-all hover:bg-primary/10 border-0 ${
         isSidebarCollapsed ? "justify-center" : "justify-start"

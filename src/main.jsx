@@ -28,7 +28,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           pauseOnHover
           theme="light"
         />
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </ThemeProvider>
     </QueryClientProvider>
   </React.StrictMode>

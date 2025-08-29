@@ -82,6 +82,36 @@
   --sidebar-ring: oklch(0.708 0 0);
 
   font-family: var(--font-roboto);
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 1px;
+    scrollbar-arrow-color: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent; /* slate-800 */
+    border-radius: 10px;
+    scrollbar-arrow-color: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: transparent; /* slate-600 */
+    border-radius: 10px;
+    border: 2px solid #1e293b; /* Creates padding around thumb */
+    scrollbar-arrow-color: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: transparent; /* slate-500 */
+    scrollbar-arrow-color: transparent;
+  }
+
+  /* For Firefox */
+  .custom-scrollbar {
+    scrollbar-arrow-color: transparent;
+    scrollbar-width: auto;
+    scrollbar-color: transparent transparent; /* thumb track */
+  }
 }
 
 .dark {
@@ -91,7 +121,7 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: #683BF0;
+  --primary: #683bf0;
   --primary-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
@@ -116,6 +146,31 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #1e293b; /* slate-800 */
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #475569; /* slate-600 */
+    border-radius: 10px;
+    border: 2px solid #1e293b; /* Creates padding around thumb */
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: transparent; /* slate-500 */
+  }
+
+  /* For Firefox */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #475569 #1e293b; /* thumb track */
+  }
 }
 
 @layer base {

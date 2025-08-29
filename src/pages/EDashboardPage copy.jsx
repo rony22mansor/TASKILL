@@ -52,7 +52,7 @@ export default function EDashboardPage() {
   return (
     <div className="relative min-h-screen w-full bg-gray-100 dark:bg-gray-900">
       <div
-        className={`grid h-full w-full font-sans transition-all duration-300 ${
+        className={`grid h-full w-full  ${
           isSidebarCollapsed
             ? "md:grid-cols-[72px_1fr]"
             : "md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]"
@@ -60,10 +60,11 @@ export default function EDashboardPage() {
       >
         {/* SideBar */}
         <div
-          className={`fixed inset-y-0 left-0 z-10 bg-white dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 transition-all duration-300 md:relative md:translate-x-0 ${
+          className={`fixed inset-y-0 left-0 z-10 bg-white dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800  md:relative md:translate-x-0 ${
             isSidebarCollapsed ? "w-[72px]" : "w-[220px] lg:w-[280px]"
           }`}
         >
+          s
           <div className="flex h-full max-h-screen flex-col">
             <div className="flex h-14 items-center border-b px-3 lg:h-[60px] gap-2">
               <a
@@ -83,7 +84,7 @@ export default function EDashboardPage() {
             <div className="flex-1 overflow-y-clip">
               <nav
                 className={
-                  "grid items-start text-sm font-medium transition-all px-4 py-4 gap-2"
+                  "grid items-start text-sm font-medium  px-4 py-4 gap-2"
                 }
               >
                 {navItems.map((item) => (
@@ -164,7 +165,7 @@ export default function EDashboardPage() {
         variant="secondary"
         size="icon"
         onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-        className={` border-2 absolute top-1/2 z-10 duration-300 transition-all  -translate-x-1/2  ${
+        className={` border-2 absolute top-1/2 z-10  -translate-x-1/2  ${
           isSidebarCollapsed ? "left-[72px]" : "left-[220px] lg:left-[280px]"
         }`}
       >
