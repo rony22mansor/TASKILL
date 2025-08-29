@@ -9,32 +9,20 @@ export default function LoginFooter() {
     <div>
       <div className="after:border-foreground/30 relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t-2">
         <span className="bg-background text-foreground/60 font-semibold relative z-10 px-2">
-          Don&apos;t have an account?
+          Not a manager?
         </span>
       </div>
 
       <div className="pt-4">
         <Button
-          onClick={() => navigate("/register")}
+          onClick={() => navigate("/login")}
           size="default"
           variant="outline"
           id="button"
           type="submit"
           className="w-full cursor-pointer"
         >
-          Create One 🔥
-        </Button>
-      </div>
-      <div className="pt-4">
-        <Button
-          onClick={() => navigate("/admin_login")}
-          size="default"
-          variant="outline"
-          id="button"
-          type="submit"
-          className="w-full cursor-pointer"
-        >
-          A Project Manager?
+          Login as Employee
         </Button>
       </div>
     </div>

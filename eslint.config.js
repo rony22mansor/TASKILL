@@ -26,6 +26,7 @@ export default [
       ...react.configs.recommended.rules, // <-- 2. ADD REACT'S RECOMMENDED RULES
       // --- React Hooks Rules ---
       ...reactHooks.configs.recommended.rules,
+      "no-undef": "error",
       // --- React Refresh Rule ---
       "react-refresh/only-export-components": "warn",
       // --- Your Custom Rules ---

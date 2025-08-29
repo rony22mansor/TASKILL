@@ -44,12 +44,12 @@ export function DatePicker({ value, onChange }: DatePickerProps) {
   React.useEffect(() => {
     setInputValue(formatDate(value));
   }, [value]);
-
+  const hiddenDays = [new Date(2300, 5, 10)];
   return (
     <div className="relative flex gap-2">
       <Input
         // Register the input
-        id="date"
+        id="birthdate"
         value={inputValue}
         placeholder="June 01, 2025"
         className="bg-background pr-10"
@@ -87,12 +87,12 @@ export function DatePicker({ value, onChange }: DatePickerProps) {
         >
           <Calendar
             mode="single"
-            selected={value} // Use the value prop here
+            selected={value}
             captionLayout="dropdown"
             month={month}
             onMonthChange={setMonth}
             onSelect={(date) => {
-              onChange(date); // Call the onChange prop from react-hook-form
+              onChange(date);
               setOpen(false);
             }}
           />

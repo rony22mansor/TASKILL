@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/lib/validators"; // Adjust import path
 import { useMutation } from "@tanstack/react-query";
-import { loginUser } from "@/lib/api/authApi"; // Adjust import path
+import { loginAdmin } from "@/lib/api/authApi"; // Adjust import path
 import { toast } from "react-toastify"; // <-- Import toast
 import { LocalStorageKeys } from "@/lib/constants";
 
@@ -23,17 +23,12 @@ export default function LoginForm() {
 
   // 2. TanStack Query Mutation (remains the same)
   const mutation = useMutation({
-    mutationKey: ["login"],
-    mutationFn: loginUser,
+    mutationKey: ["login_admin"],
+    mutationFn: loginAdmin,
     onSuccess: (data) => {
       toast.success(data.message);
-      console.log("data ==> ", data);
-      if (data.employee) {
-        console.log("Employee");
-        localStorage.setItem(
-          LocalStorageKeys.USER,
-          JSON.stringify(data.employee)
-        );
+      if (data.admin) {
+        localStorage.setItem(LocalStorageKeys.USER, JSON.stringify(data.admin));
       }
       localStorage.setItem(LocalStorageKeys.TOKEN, data.access_token);
 
@@ -97,7 +92,7 @@ export default function LoginForm() {
             disabled={mutation.isPending}
             className="w-full cursor-pointer"
           >
-            {mutation.isPending ? "Logging in..." : "Login"}
+            {mutation.isPending ? "Please Wait..." : "Get in"}
           </Button>
         </div>
       </div>

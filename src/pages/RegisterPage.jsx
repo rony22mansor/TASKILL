@@ -16,7 +16,7 @@ export default function RegisterPage() {
             <RegisterFooter />
           </div>
         </div>
-        <div className=" bg-muted rounded-4xl m-6 relative hidden w-full md:block">
+        <div className=" bg-primary/10 rounded-4xl m-6 relative hidden w-full md:block">
           <ImageSlider />
         </div>
       </div>

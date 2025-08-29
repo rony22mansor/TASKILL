@@ -1,18 +1,15 @@
-import * as React from "react"
+import { LocalStorageKeys } from "@/lib/constants";
+import * as React from "react";
 
+import { Navigate } from "react-router-dom";
 
-import { Navigate } from 'react-router-dom';
-
+// eslint-disable-next-line react/prop-types
 const ProtectedRoute = ({ children }) => {
-  // Check for the auth token in localStorage
-  const isAuthenticated = !!localStorage.getItem('authToken');
+  const isAuthenticated = !!localStorage.getItem(LocalStorageKeys.TOKEN);
 
   if (!isAuthenticated) {
-    // If not authenticated, redirect to the login page
     return <Navigate to="/login" replace />;
   }
-
-  // If authenticated, render the child components (e.g., DashboardPage)
   return children;
 };
 

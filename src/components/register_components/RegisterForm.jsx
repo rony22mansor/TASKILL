@@ -137,6 +137,7 @@ export default function RegisterForm() {
         <div className="grid w-full items-center gap-1">
           <Label htmlFor="birthdate">Birthdate</Label>
           <Controller
+            id="birthdate"
             name="birth_date"
             control={control}
             render={({ field }) => (

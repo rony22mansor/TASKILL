@@ -20,7 +20,7 @@ export function ThemeToggleButton() {
     <Button
       variant="outline"
       size="icon"
-      className="absolute inset-4"
+      className="absolute inset-4 z-40"
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label="Toggle theme"
     >
