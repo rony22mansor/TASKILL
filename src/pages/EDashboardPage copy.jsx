@@ -11,6 +11,8 @@ import React, { useEffect, useState } from "react";
 import NavButton from "@/components/NavButton";
 import { LocalStorageKeys } from "@/lib/constants";
 import LogOutButton from "@/components/LogoutButton";
+import Profilepage from "./EmployeePages/ProfilePages/Profilepage";
+import TasksPage from "./EmployeePages/TasksPages/TasksPage";
 
 export default function EDashboardPage() {
   const [activePage, setActivePage] = useState("My Profile");
@@ -35,9 +37,9 @@ export default function EDashboardPage() {
   const renderActivePage = () => {
     switch (activePage) {
       case "My Profile":
-        return <h1>Profile</h1>;
+        return <Profilepage />;
       case "My Tasks":
-        return <h1>Tasks</h1>;
+        return <TasksPage />;
 
       default:
         return <h1>Profile</h1>;

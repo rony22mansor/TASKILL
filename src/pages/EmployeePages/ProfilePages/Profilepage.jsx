@@ -1,0 +1,131 @@
+"use client";
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+
+const Profilepage = () => {
+  const [profile, setProfile] = useState({
+    id: 13,
+    name: "string",
+    email: "user@example.com",
+    phone_number: "0937723418",
+    address: "address",
+    birth_date: "2025-08-20",
+    skills: [{ skill_id: 3, name: "mysql", rating: 4 }],
+    task_capacity: 0,
+    available_hours: 0,
+  });
+
+  const handleChange = (field, value) => {
+    setProfile((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSave = () => {
+    console.log("Updated Profile:", profile);
+    // API call goes here
+  };
+
+  return (
+    <div className="flex justify-center my-10">
+      <Card className="w-full max-w-2xl shadow-lg rounded-2xl">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">Profile</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* Name */}
+          <div className="space-y-2">
+            <Label>Name</Label>
+            <Input
+              value={profile.name}
+              onChange={(e) => handleChange("name", e.target.value)}
+            />
+          </div>
+
+          {/* Email */}
+          <div className="space-y-2">
+            <Label>Email</Label>
+            <Input
+              type="email"
+              value={profile.email}
+              onChange={(e) => handleChange("email", e.target.value)}
+            />
+          </div>
+
+          {/* Phone */}
+          <div className="space-y-2">
+            <Label>Phone Number</Label>
+            <Input
+              value={profile.phone_number}
+              onChange={(e) => handleChange("phone_number", e.target.value)}
+            />
+          </div>
+
+          {/* Address */}
+          <div className="space-y-2">
+            <Label>Address</Label>
+            <Textarea
+              value={profile.address}
+              onChange={(e) => handleChange("address", e.target.value)}
+            />
+          </div>
+
+          {/* Birth Date */}
+          <div className="space-y-2">
+            <Label>Birth Date</Label>
+            <Input
+              type="date"
+              value={profile.birth_date}
+              onChange={(e) => handleChange("birth_date", e.target.value)}
+            />
+          </div>
+
+          {/* Task Capacity */}
+          <div className="space-y-2">
+            <Label>Task Capacity</Label>
+            <Input
+              type="number"
+              value={profile.task_capacity}
+              onChange={(e) =>
+                handleChange("task_capacity", Number(e.target.value))
+              }
+            />
+          </div>
+
+          {/* Available Hours */}
+          <div className="space-y-2">
+            <Label>Available Hours</Label>
+            <Input
+              type="number"
+              value={profile.available_hours}
+              onChange={(e) =>
+                handleChange("available_hours", Number(e.target.value))
+              }
+            />
+          </div>
+
+          {/* Skills (read-only) */}
+          <div className="space-y-2">
+            <Label>Skills</Label>
+            <ul className="list-disc pl-6">
+              {profile.skills.map((skill) => (
+                <li key={skill.skill_id}>
+                  {skill.name} (Rating: {skill.rating}/5)
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Save Button */}
+          <div className="flex justify-end">
+            <Button onClick={handleSave}>Save Changes</Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default Profilepage;
