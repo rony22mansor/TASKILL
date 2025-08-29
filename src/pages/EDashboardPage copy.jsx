@@ -66,7 +66,6 @@ export default function EDashboardPage() {
             isSidebarCollapsed ? "w-[72px]" : "w-[220px] lg:w-[280px]"
           }`}
         >
-          s
           <div className="flex h-full max-h-screen flex-col">
             <div className="flex h-14 items-center border-b px-3 lg:h-[60px] gap-2">
               <a
