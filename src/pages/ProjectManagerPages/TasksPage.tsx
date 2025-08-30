@@ -9,16 +9,16 @@ export default function TasksPage({ setIsPageDirty, onNavigate }) {
   return (
     <div className="p-4 md:p-8">
       {/* Breadcrumb Navigation */}
-      <div className="flex items-center text-md mb-4">
+      <div className="flex items-center text-md  mb-5">
         <nav>
-          <ol className="flex items-center gap-1.5">
+          <ol className="flex items-start">
             <li>
               <button
                 onClick={() => setSelectedTask(null)}
                 className={`font-medium ${
                   !selectedTask
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground cursor-pointer"
+                    ? "text-foreground text-3xl font-bold"
+                    : "text-muted-foreground hover:text-foreground cursor-pointer text-3xl font-bold"
                 }`}
               >
                 Tasks
@@ -27,8 +27,8 @@ export default function TasksPage({ setIsPageDirty, onNavigate }) {
             {selectedTask && (
               <>
                 <li className="flex items-center gap-1.5">
-                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
-                  <span className="font-medium text-foreground truncate max-w-xs md:max-w-md">
+                  <ChevronRight className=" text-muted-foreground" />
+                  <span className=" text-foreground truncate max-w-2xl text-3xl font-bold">
                     {selectedTask.description}
                   </span>
                 </li>

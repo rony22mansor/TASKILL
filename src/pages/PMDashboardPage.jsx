@@ -15,6 +15,7 @@ import { LocalStorageKeys } from "@/lib/constants";
 import LogOutButton from "@/components/LogOutButton";
 import DiscardDialog from "@/components/DiscardDialog";
 import Employee from "./Employee";
+import TasksPage from "./ProjectManagerPages/TasksPage";
 
 export default function PMDashboardPage() {
   const [activePage, setActivePage] = useState("Assign Task");
