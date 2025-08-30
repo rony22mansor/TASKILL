@@ -12,17 +12,12 @@ const Profilepage = () => {
   const { data, loading } = useAxiosGet("employee/profile");
   const [profile, setProfile] = useState(null);
   const [editedFields, setEditedFields] = useState({});
-  const [imagePreview, setImagePreview] = useState(null);
 
   const { putData } = useAxiosPut("");
 
   useEffect(() => {
     if (data) {
       setProfile(data);
-      // ✅ Show existing profile image if API returns it
-      if (data.profile_image_url) {
-        setImagePreview(data.profile_image_url);
-      }
     }
   }, [data]);
 
@@ -31,27 +26,11 @@ const Profilepage = () => {
     setEditedFields((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Instead of FormData, convert image → base64 string for JSON
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setEditedFields((prev) => ({
-          ...prev,
-          profile_image: reader.result, // base64 string
-        }));
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const handleSave = () => {
-    // ✅ Send only edited fields as plain JSON
     console.log("Updated Profile (only edited fields):", editedFields);
-
-    putData(editedFields, "employee/profile");
+    putData(editedFields, "employee/profile").then((response) => {
+      console.log(response);
+    });
   };
 
   if (loading) return <div>Loading...</div>;
@@ -63,25 +42,6 @@ const Profilepage = () => {
           <CardTitle className="text-2xl font-bold">Profile</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Profile Image */}
-          <div className="space-y-2">
-            <Label>Profile Image</Label>
-            <div className="flex items-center gap-4">
-              {imagePreview && (
-                <img
-                  src={imagePreview}
-                  alt="Profile"
-                  className="w-24 h-24 rounded-full object-cover border"
-                />
-              )}
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
-            </div>
-          </div>
-
           {/* Name */}
           <div className="space-y-2">
             <Label>Name</Label>
