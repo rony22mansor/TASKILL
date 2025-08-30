@@ -1,10 +1,16 @@
 import React from "react";
 import { Button } from "./ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 
 type NavButtonProps = {
   dkey?: string;
   isSidebarCollapsed: boolean;
-  onNavigate: (string) => void;
+  onNavigate: (page: string) => void;
   item: {
     name: string;
     icon: any;
@@ -19,7 +25,8 @@ export default function NavButton({
   dkey,
   activePage,
 }: NavButtonProps) {
-  return (
+  // The button itself remains the same
+  const button = (
     <Button
       size={isSidebarCollapsed ? "icon" : "default"}
       key={dkey}
@@ -30,7 +37,7 @@ export default function NavButton({
         isSidebarCollapsed ? "justify-center" : "justify-start"
       } ${
         activePage === item.name
-          ? "bg-primary text-white hover:bg-primary  "
+          ? "bg-primary text-white hover:bg-primary"
           : "text-muted-foreground"
       }`}
     >
@@ -44,4 +51,24 @@ export default function NavButton({
       </span>
     </Button>
   );
+
+  // Conditionally wrap the button with a tooltip if the sidebar is collapsed
+  if (isSidebarCollapsed) {
+    return (
+      <TooltipProvider>
+        <Tooltip delayDuration={0}>
+          <TooltipTrigger asChild>{button}</TooltipTrigger>
+          <TooltipContent
+            side="right"
+            className="text-white font-bold rounded-sm text-md"
+          >
+            <p>{item.name}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
+
+  // Otherwise, return the button without a tooltip
+  return button;
 }

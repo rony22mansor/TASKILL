@@ -10,7 +10,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeProvider } from "next-themes"; // Import ThemeProvider
 import { ThemeToggleButton } from "./components/ThemeToggleButton";
 // Create a client
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>

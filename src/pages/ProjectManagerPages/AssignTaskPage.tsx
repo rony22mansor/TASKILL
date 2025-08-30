@@ -2,6 +2,7 @@ import AssignmentCard from "@/components/AssignmentCard";
 import FeedbackDialog from "@/components/FeedbackDialog";
 import Greeting from "@/components/Greeting";
 import TaskTextarea from "@/components/TaskTextarea";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
   sendAnswers,
@@ -10,7 +11,7 @@ import {
 } from "@/lib/api/assignTaskApi";
 import { router } from "@/router";
 import { useMutation } from "@tanstack/react-query";
-import { AlertTriangle, Bot, Loader2, User } from "lucide-react";
+import { AlertTriangle, Bot, ListRestart, Loader2, User } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -106,6 +107,7 @@ export default function AssignTaskPage({ setIsPageDirty }) {
     },
     onError: (err) => {
       setUiState("initial");
+      setIsPageDirty(false);
       setMessages([]);
       console.error("Error creating task:", err);
     },
@@ -129,6 +131,16 @@ export default function AssignTaskPage({ setIsPageDirty }) {
       ]);
     },
   });
+
+  const handleRestart = () => {
+    setIsPageDirty(false);
+    setUiState("initial");
+    setMessages([]);
+    setAssignment([]);
+    setAnswers({});
+    setCurrentQuestionIndex(0);
+    setLoading(false);
+  };
 
   useEffect(() => {
     if (uiState !== "initial") {
@@ -161,7 +173,7 @@ export default function AssignTaskPage({ setIsPageDirty }) {
           },
         ]);
         setLoading(false);
-      }, 1);
+      }, 400);
     } else {
       console.log("taskData.task.id ==> ", taskData.task.id);
       setTimeout(() => {
@@ -201,12 +213,12 @@ export default function AssignTaskPage({ setIsPageDirty }) {
               onSendMessage={handleSendTask}
               placeholder="Send you'r task to TASKILL"
             />
-            <div className="w-2xl mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="w-full px-10 mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
               {exampleTasks.map((task, index) => (
                 <Card
                   key={index}
                   onClick={() => handleSendTask(task)}
-                  className="cursor-pointer text-left p-4 bg-slate-100 dark:bg-slate-800/50 rounded-md hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="cursor-pointer text-left p-4  dark:bg-slate-800/50 rounded-md hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
                     {task}
@@ -230,15 +242,15 @@ export default function AssignTaskPage({ setIsPageDirty }) {
                   }`}
                 >
                   {msg.sender === "assistant" && (
-                    <div className="w-12 h-12 rounded-tr-none  rounded-full bg-slate-700 flex items-center justify-center flex-shrink-0">
-                      <Bot className="w-6 h-6 text-white " />
+                    <div className="w-12 h-12 rounded-tr-none  rounded-full bg-slate-300 dark:bg-slate-800 flex items-center justify-center flex-shrink-0">
+                      <Bot className="w-6 h-6 text-foreground dark:text-slate-50   " />
                     </div>
                   )}
                   <div
                     className={`max-w-lg p-3 rounded-2xl ${
                       msg.sender === "user"
                         ? "bg-primary text-white rounded-tr-none"
-                        : "bg-slate-700 text-white dark:bg-slate-800  dark:text-slate-50 rounded-tl-none"
+                        : "bg-slate-300 text-foreground  dark:bg-slate-800  dark:text-slate-50 rounded-tl-none"
                     }`}
                   >
                     <p className="text-md leading-relaxed">{msg.text}</p>
@@ -280,7 +292,7 @@ export default function AssignTaskPage({ setIsPageDirty }) {
             </div>
 
             {/* 2. Sticky input container at the bottom */}
-            <div className="p-4 justify-center items-center flex flex-col">
+            <div className="p-4 justify-center items-center flex flex-col relative">
               <TaskTextarea
                 isDisabled={isInputDisabled}
                 onSendMessage={handleSendMessage}
@@ -293,10 +305,20 @@ export default function AssignTaskPage({ setIsPageDirty }) {
                   <span>An error occurred. Please refresh and try again.</span>
                 </div>
               )}
+              <Button
+                onClick={handleRestart}
+                variant="outline"
+                className="absolute -top-3"
+              >
+                <div className="flex gap-2 items-center">
+                  Restart
+                  <ListRestart />
+                </div>
+              </Button>
             </div>
           </>
         ) : (
-          <div className="p-12">
+          <div className="p-12 pb-25">
             <div>
               <h2 className="text-3xl font-bold text-center tracking-tight mb-2">
                 Task Assignments
@@ -314,6 +336,15 @@ export default function AssignTaskPage({ setIsPageDirty }) {
                 ))}
               </div>
             </div>
+            <Button
+              onClick={handleRestart}
+              className="absolute bottom-10 right-10"
+            >
+              <div className="flex gap-2 items-center">
+                Restart
+                <ListRestart />
+              </div>
+            </Button>
           </div>
         )}
       </div>

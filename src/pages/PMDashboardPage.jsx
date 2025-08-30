@@ -9,12 +9,13 @@ import {
   Goal,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import AssignTaskPage from "./AssignTaskPage";
+import AssignTaskPage from "./ProjectManagerPages/AssignTaskPage";
 import NavButton from "@/components/NavButton";
 import { LocalStorageKeys } from "@/lib/constants";
-import LogOutButton from "@/components/LogoutButton";
+import LogOutButton from "@/components/LogOutButton";
 import DiscardDialog from "@/components/DiscardDialog";
 import Employee from "./Employee";
+import TasksPage from "./ProjectManagerPages/TasksPage";
 
 export default function PMDashboardPage() {
   const [activePage, setActivePage] = useState("Assign Task");
@@ -68,7 +69,12 @@ export default function PMDashboardPage() {
       case "Assign Task":
         return <AssignTaskPage setIsPageDirty={setIsPageDirty} />;
       case "Tasks":
-        return <h1>Tasks</h1>;
+        return (
+          <TasksPage
+            setIsPageDirty={setIsPageDirty}
+            onNavigate={setActivePage}
+          />
+        );
       case "Employees":
         return <Employee />;
       default:
