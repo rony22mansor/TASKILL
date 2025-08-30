@@ -6,17 +6,17 @@ const lang = localStorage.getItem('i18nextLng')
 
 const privateAxios = axios.create({
   baseURL,
-  headers: {
-    "Content-Type": "application/x-www-form-urlencoded",
-    "Access-Control-Allow-Origin": "*",
-    "Accept-Language" : lang
-  },
+  // headers: {
+  //   "Content-Type": "application/json",
+  //   "Access-Control-Allow-Origin": "*",
+  //   "Accept-Language" : lang
+  // },
 });
 
 const Axios = axios.create({
   baseURL,
   headers: {
-    "Content-Type": "application/x-www-form-urlencoded",
+    "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
     "Accept-Language" : lang
 

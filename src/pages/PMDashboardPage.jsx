@@ -14,6 +14,7 @@ import NavButton from "@/components/NavButton";
 import { LocalStorageKeys } from "@/lib/constants";
 import LogOutButton from "@/components/LogoutButton";
 import DiscardDialog from "@/components/DiscardDialog";
+import Employee from "./Employee";
 
 export default function PMDashboardPage() {
   const [activePage, setActivePage] = useState("Assign Task");
@@ -69,7 +70,7 @@ export default function PMDashboardPage() {
       case "Tasks":
         return <h1>Tasks</h1>;
       case "Employees":
-        return <h1>Employee</h1>;
+        return <Employee />;
       default:
         return <AssignTaskPage setIsPageDirty={setIsPageDirty} />;
     }
