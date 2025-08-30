@@ -23,7 +23,7 @@ const useAxiosPut = (url) => {
     setError(null);
     setSuccess(false);
     setSuccessMessage("");
-
+    
     try {
       const response = await privateAxios.put(url + addUrl, putData, {
         onUploadProgress: (progressEvent) => {

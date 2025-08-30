@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import EmployeeDetailsDialog from "./EmployeeDetailsDialog";
 
 // Mock response (replace with your API hook later)
 const initialEmployees = [
@@ -48,6 +49,8 @@ const Employee = () => {
   const [employees, setEmployees] = useState(initialEmployees);
   const [editId, setEditId] = useState(null);
   const [formData, setFormData] = useState({});
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
 
   const handleEdit = (emp) => {
     setEditId(emp.id);
@@ -64,6 +67,43 @@ const Employee = () => {
     );
     setEditId(null);
     console.log("Saved data:", formData); // Replace with API call
+  };
+
+  // Mock API details response
+  const mockDetailsResponse = {
+    employee: {
+      id: 4,
+      updated_at: "2025-08-16T19:44:08",
+      email: "test@gmail.com",
+      role: "",
+      task_capacity: 5,
+      created_at: "2025-08-16T19:44:08",
+      name: "mario",
+      password:
+        "$2b$12$/R6sWqmNa4bGnw3POf4RDuHY/yy.mgupTRJPuJPlf.U8OZsmVWJxq",
+      status: "available",
+      available_hours: 8,
+    },
+    tasks_summary: [
+      {
+        parent_task: {
+          id: 1,
+          description: "parent task",
+        },
+        assigned_subtasks: [
+          {
+            id: 1,
+            description: "sub task",
+          },
+        ],
+      },
+    ],
+  };
+
+  const handleDetails = (emp) => {
+    // Replace mockDetailsResponse with API call per emp.id
+    setSelectedEmployee(mockDetailsResponse);
+    setDialogOpen(true);
   };
 
   return (
@@ -191,7 +231,7 @@ const Employee = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => console.log("Details for", emp.id)}
+                  onClick={() => handleDetails(emp)}
                 >
                   Details
                 </Button>
@@ -200,6 +240,15 @@ const Employee = () => {
           </Card>
         ))}
       </div>
+
+      {/* Details Dialog */}
+      {selectedEmployee && (
+        <EmployeeDetailsDialog
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          data={selectedEmployee}
+        />
+      )}
     </div>
   );
 };

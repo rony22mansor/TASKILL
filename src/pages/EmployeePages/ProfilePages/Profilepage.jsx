@@ -12,7 +12,6 @@ const Profilepage = () => {
   const { data, loading } = useAxiosGet("employee/profile");
   const [profile, setProfile] = useState(null);
   const [editedFields, setEditedFields] = useState({});
-  const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
   const { putData } = useAxiosPut("");
@@ -35,23 +34,24 @@ const Profilepage = () => {
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
     if (file) {
-      setImageFile(file);
-      setImagePreview(URL.createObjectURL(file)); // preview new upload
-      setEditedFields((prev) => ({ ...prev, profile_image: file }));
+      // Instead of FormData, convert image → base64 string for JSON
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditedFields((prev) => ({
+          ...prev,
+          profile_image: reader.result, // base64 string
+        }));
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
   const handleSave = () => {
-    if (!profile) return;
+    // ✅ Send only edited fields as plain JSON
+    console.log("Updated Profile (only edited fields):", editedFields);
 
-    const formData = new FormData();
-    Object.entries(editedFields).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
-
-    console.log("Updated Profile (only edited fields):", [...formData]);
-
-    putData(formData, "employee/profile");
+    putData(editedFields, "employee/profile");
   };
 
   if (loading) return <div>Loading...</div>;
