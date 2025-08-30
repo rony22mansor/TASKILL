@@ -2,8 +2,8 @@ import { useState } from "react";
 import { privateAxios } from "./Axios";
 import { useLocation } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { useDispatch } from "react-redux";
-import { showSnackbar } from "../store/snackbarSlice";
+// import { useDispatch } from "react-redux";
+// import { showSnackbar } from "../store/snackbarSlice";
 
 const useAxiosPut = (url) => {
   const [data, setData] = useState(null);
@@ -16,7 +16,7 @@ const useAxiosPut = (url) => {
 
   const location = useLocation();
   const queryClient = useQueryClient();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const putData = async (putData, addUrl = "", invalidateQueryKeys = []) => {
     setLoading(true);
@@ -37,9 +37,9 @@ const useAxiosPut = (url) => {
       setSuccess(true);
       setSuccessMessage(response.data.message);
 
-      if (location.pathname.split("/")[1] !== "NotificationsAndReports") {
-        dispatch(showSnackbar({ message: response.data.message, severity: "success" }));
-      }
+      // if (location.pathname.split("/")[1] !== "NotificationsAndReports") {
+      //   dispatch(showSnackbar({ message: response.data.message, severity: "success" }));
+      // }
 
       // Invalidate react-query caches
       invalidateQueryKeys.forEach((key) => {
@@ -62,9 +62,9 @@ const useAxiosPut = (url) => {
 
       setError(err);
 
-      if (url !== "markets/sendToken") {
-        dispatch(showSnackbar({ message: errorMessage(), severity: "error" }));
-      }
+      // if (url !== "markets/sendToken") {
+      //   dispatch(showSnackbar({ message: errorMessage(), severity: "error" }));
+      // }
 
       return err;
     } finally {

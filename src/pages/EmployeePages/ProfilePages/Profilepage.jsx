@@ -1,33 +1,60 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import useAxiosGet from "@/Hooks/UseAxiosGet";
+import useAxiosPut from "@/Hooks/UseAxiosPut";
 
 const Profilepage = () => {
-  const [profile, setProfile] = useState({
-    id: 13,
-    name: "string",
-    email: "user@example.com",
-    phone_number: "0937723418",
-    address: "address",
-    birth_date: "2025-08-20",
-    skills: [{ skill_id: 3, name: "mysql", rating: 4 }],
-    task_capacity: 0,
-    available_hours: 0,
-  });
-  const { data } = useAxiosGet("employee/profile");
+  const { data, loading } = useAxiosGet("employee/profile");
+  const [profile, setProfile] = useState(null);
+  const [editedFields, setEditedFields] = useState({});
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const { putData } = useAxiosPut("");
+
+  useEffect(() => {
+    if (data) {
+      setProfile(data);
+      // ✅ Show existing profile image if API returns it
+      if (data.profile_image_url) {
+        setImagePreview(data.profile_image_url);
+      }
+    }
+  }, [data]);
+
   const handleChange = (field, value) => {
     setProfile((prev) => ({ ...prev, [field]: value }));
+    setEditedFields((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file)); // preview new upload
+      setEditedFields((prev) => ({ ...prev, profile_image: file }));
+    }
   };
 
   const handleSave = () => {
-    console.log("Updated Profile:", profile);
-    // API call goes here
+    if (!profile) return;
+
+    const formData = new FormData();
+    Object.entries(editedFields).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    console.log("Updated Profile (only edited fields):", [...formData]);
+
+    putData(formData, "employee/profile");
   };
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div className="flex justify-center my-10">
@@ -36,11 +63,30 @@ const Profilepage = () => {
           <CardTitle className="text-2xl font-bold">Profile</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
+          {/* Profile Image */}
+          <div className="space-y-2">
+            <Label>Profile Image</Label>
+            <div className="flex items-center gap-4">
+              {imagePreview && (
+                <img
+                  src={imagePreview}
+                  alt="Profile"
+                  className="w-24 h-24 rounded-full object-cover border"
+                />
+              )}
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+            </div>
+          </div>
+
           {/* Name */}
           <div className="space-y-2">
             <Label>Name</Label>
             <Input
-              value={profile.name}
+              value={profile?.name || ""}
               onChange={(e) => handleChange("name", e.target.value)}
             />
           </div>
@@ -50,7 +96,7 @@ const Profilepage = () => {
             <Label>Email</Label>
             <Input
               type="email"
-              value={profile.email}
+              value={profile?.email || ""}
               onChange={(e) => handleChange("email", e.target.value)}
             />
           </div>
@@ -59,7 +105,7 @@ const Profilepage = () => {
           <div className="space-y-2">
             <Label>Phone Number</Label>
             <Input
-              value={profile.phone_number}
+              value={profile?.phone_number || ""}
               onChange={(e) => handleChange("phone_number", e.target.value)}
             />
           </div>
@@ -68,7 +114,7 @@ const Profilepage = () => {
           <div className="space-y-2">
             <Label>Address</Label>
             <Textarea
-              value={profile.address}
+              value={profile?.address || ""}
               onChange={(e) => handleChange("address", e.target.value)}
             />
           </div>
@@ -78,7 +124,7 @@ const Profilepage = () => {
             <Label>Birth Date</Label>
             <Input
               type="date"
-              value={profile.birth_date}
+              value={profile?.birth_date || ""}
               onChange={(e) => handleChange("birth_date", e.target.value)}
             />
           </div>
@@ -88,7 +134,7 @@ const Profilepage = () => {
             <Label>Task Capacity</Label>
             <Input
               type="number"
-              value={profile.task_capacity}
+              value={profile?.task_capacity || ""}
               onChange={(e) =>
                 handleChange("task_capacity", Number(e.target.value))
               }
@@ -100,7 +146,7 @@ const Profilepage = () => {
             <Label>Available Hours</Label>
             <Input
               type="number"
-              value={profile.available_hours}
+              value={profile?.available_hours || ""}
               onChange={(e) =>
                 handleChange("available_hours", Number(e.target.value))
               }
@@ -111,9 +157,9 @@ const Profilepage = () => {
           <div className="space-y-2">
             <Label>Skills</Label>
             <ul className="list-disc pl-6">
-              {profile.skills.map((skill) => (
-                <li key={skill.skill_id}>
-                  {skill.name} (Rating: {skill.rating}/5)
+              {profile?.skills?.map((skill) => (
+                <li key={skill?.skill_id}>
+                  {skill?.name} (Rating: {skill?.rating}/5)
                 </li>
               ))}
             </ul>
@@ -121,7 +167,9 @@ const Profilepage = () => {
 
           {/* Save Button */}
           <div className="flex justify-end">
-            <Button onClick={handleSave}>Save Changes</Button>
+            <Button onClick={handleSave} disabled={loading}>
+              {loading ? "Saving..." : "Save Changes"}
+            </Button>
           </div>
         </CardContent>
       </Card>
