@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import useAxiosGet from "@/Hooks/UseAxiosGet";
 
 const Profilepage = () => {
   const [profile, setProfile] = useState({
@@ -18,7 +19,7 @@ const Profilepage = () => {
     task_capacity: 0,
     available_hours: 0,
   });
-
+  const { data } = useAxiosGet("employee/profile");
   const handleChange = (field, value) => {
     setProfile((prev) => ({ ...prev, [field]: value }));
   };
