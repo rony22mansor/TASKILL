@@ -16,6 +16,13 @@ import { toast } from "react-toastify";
 export default function TasksListPage({ onSelectTask, onNavigate }) {
   const [taskToDelete, setTaskToDelete] = useState(null);
 
+  const {
+    data,
+    loading: isLoading,
+    error,
+    refetch,
+  } = useAxiosGet("admin/tasks");
+
   const deleteMutation = useMutation({
     mutationFn: deleteTask, // The function to call for deleting
     onSuccess: () => {
@@ -24,13 +31,6 @@ export default function TasksListPage({ onSelectTask, onNavigate }) {
       queryClient.invalidateQueries({ queryKey: ["fetchData", "admin/tasks"] });
     },
   });
-
-  const {
-    data,
-    loading: isLoading,
-    error,
-    refetch,
-  } = useAxiosGet("admin/tasks");
 
   const handleDeleteClick = (task, event) => {
     event.stopPropagation();

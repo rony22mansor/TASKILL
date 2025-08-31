@@ -7,6 +7,8 @@ import {
   ChevronRight,
   ChevronLeft,
   Goal,
+  BrainCog,
+  BrainCircuit,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import AssignTaskPage from "./ProjectManagerPages/AssignTaskPage";
@@ -16,6 +18,7 @@ import LogOutButton from "@/components/LogOutButton";
 import DiscardDialog from "@/components/DiscardDialog";
 import Employee from "./Employee";
 import TasksPage from "./ProjectManagerPages/TasksPage";
+import SkillsPage from "./ProjectManagerPages/SkillsPage";
 
 export default function PMDashboardPage() {
   const [activePage, setActivePage] = useState("Assign Task");
@@ -77,6 +80,8 @@ export default function PMDashboardPage() {
         );
       case "Employees":
         return <Employee />;
+      case "Skills":
+        return <SkillsPage setIsPageDirty={setIsPageDirty} />;
       default:
         return <AssignTaskPage setIsPageDirty={setIsPageDirty} />;
     }
@@ -86,6 +91,7 @@ export default function PMDashboardPage() {
     { name: "Assign Task", icon: Home },
     { name: "Tasks", icon: ListChecks },
     { name: "Employees", icon: Users },
+    { name: "Skills", icon: BrainCircuit },
   ];
 
   return (
