@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -12,43 +12,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-// Mock response (replace with your API hook later)
-const initialEmployees = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "john@example.com",
-    phone_number: "+123456789",
-    address: "123 Main St",
-    task_capacity: 5,
-    available_hours: 20,
-    profile_image_url: "https://randomuser.me/api/portraits/men/32.jpg",
-    skills: [
-      { skill_id: 1, name: "React", rating: 5 },
-      { skill_id: 2, name: "Laravel", rating: 4 },
-    ],
-    status: "Active",
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    email: "jane@example.com",
-    phone_number: "+987654321",
-    address: "456 Side St",
-    task_capacity: 4,
-    available_hours: 15,
-    profile_image_url: null,
-    skills: [{ skill_id: 3, name: "Vue.js", rating: 5 }],
-    status: "Inactive",
-  },
-];
+import EmployeeDetailsDialog from "./EmployeeDetailsDialog";
+import useAxiosGet from "@/Hooks/UseAxiosGet";
+import useAxiosPut from "@/Hooks/UseAxiosPut";
 
 const Employee = () => {
-  const [employees, setEmployees] = useState(initialEmployees);
+  const [employees, setEmployees] = useState([]);
   const [editId, setEditId] = useState(null);
   const [formData, setFormData] = useState({});
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const { data } = useAxiosGet("admin/employees");
+  const { putData } = useAxiosPut("admin/employees/");
 
+  useEffect(() => {
+    setEmployees(data);
+  }, [data]);
   const handleEdit = (emp) => {
     setEditId(emp.id);
     setFormData({
@@ -59,11 +38,14 @@ const Employee = () => {
   };
 
   const handleSave = (id) => {
-    setEmployees((prev) =>
-      prev.map((emp) => (emp.id === id ? { ...emp, ...formData } : emp))
-    );
     setEditId(null);
-    console.log("Saved data:", formData); // Replace with API call
+    console.log("Saved data:", formData);
+    putData(formData, `${id}`, [["fetchData", "/admin/employees"]]);
+  };
+
+  const handleDetails = (emp) => {
+    setSelectedEmployee(emp.id);
+    setDialogOpen(true);
   };
 
   return (
@@ -71,34 +53,34 @@ const Employee = () => {
       <h1 className="text-3xl font-bold mb-6">Employees</h1>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {employees.map((emp) => (
-          <Card key={emp.id} className="shadow-md hover:shadow-lg transition">
+        {employees?.map((emp) => (
+          <Card key={emp?.id} className="shadow-md hover:shadow-lg transition">
             <CardHeader className="flex flex-row items-center gap-4">
               <Avatar className="w-16 h-16">
-                <AvatarImage src={emp.profile_image_url || ""} />
-                <AvatarFallback>{emp.name.charAt(0)}</AvatarFallback>
+                <AvatarImage src={emp?.profile_image_url || ""} />
+                <AvatarFallback>{emp?.name.charAt(0)}</AvatarFallback>
               </Avatar>
               <div>
-                <CardTitle>{emp.name}</CardTitle>
-                <p className="text-sm text-gray-500">{emp.email}</p>
+                <CardTitle>{emp?.name}</CardTitle>
+                <p className="text-sm text-gray-500">{emp?.email}</p>
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
               <p>
-                📞 <span className="text-gray-700">{emp.phone_number}</span>
+                📞 <span className="text-gray-700">{emp?.phone_number}</span>
               </p>
               <p>
-                📍 <span className="text-gray-700">{emp.address}</span>
+                📍 <span className="text-gray-700">{emp?.address}</span>
               </p>
 
-              {editId === emp.id ? (
+              {editId === emp?.id ? (
                 <>
                   {/* Editable fields */}
                   <div>
                     🕒 Available Hours:
                     <Input
                       type="number"
-                      value={formData.available_hours ?? ""}
+                      value={formData?.available_hours ?? ""}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -112,7 +94,7 @@ const Employee = () => {
                     📊 Task Capacity:
                     <Input
                       type="number"
-                      value={formData.task_capacity ?? ""}
+                      value={formData?.task_capacity ?? ""}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -146,14 +128,15 @@ const Employee = () => {
                   {/* Normal display mode */}
                   <p>
                     🕒 Available Hours:{" "}
-                    <span className="font-medium">{emp.available_hours}</span>
+                    <span className="font-medium">{emp?.available_hours}</span>
                   </p>
                   <p>
                     📊 Task Capacity:{" "}
-                    <span className="font-medium">{emp.task_capacity}</span>
+                    <span className="font-medium">{emp?.task_capacity}</span>
                   </p>
                   <p>
-                    ✅ Status: <span className="font-medium">{emp.status}</span>
+                    ✅ Status:{" "}
+                    <span className="font-medium">{emp?.status}</span>
                   </p>
                 </>
               )}
@@ -161,7 +144,7 @@ const Employee = () => {
               <div>
                 <p className="mb-1">Skills:</p>
                 <div className="flex flex-wrap gap-2">
-                  {emp.skills.map((skill) => (
+                  {emp?.skills?.map((skill) => (
                     <Badge key={skill.skill_id} variant="secondary">
                       {skill.name} ⭐{skill.rating}
                     </Badge>
@@ -191,7 +174,7 @@ const Employee = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => console.log("Details for", emp.id)}
+                  onClick={() => handleDetails(emp)}
                 >
                   Details
                 </Button>
@@ -200,6 +183,15 @@ const Employee = () => {
           </Card>
         ))}
       </div>
+
+      {/* Details Dialog */}
+      {selectedEmployee && (
+        <EmployeeDetailsDialog
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          id={selectedEmployee}
+        />
+      )}
     </div>
   );
 };

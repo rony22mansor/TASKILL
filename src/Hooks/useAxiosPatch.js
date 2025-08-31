@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 // import { useDispatch } from "react-redux";
 // import { showSnackbar } from "../store/snackbarSlice";
 
-const useAxiosPut = (url) => {
+const useAxiosPatch = (url) => {
   const [data, setData] = useState(null);
   const [responseData, setResponseData] = useState(null);
   const [error, setError] = useState(null);
@@ -18,14 +18,14 @@ const useAxiosPut = (url) => {
   const queryClient = useQueryClient();
   // const dispatch = useDispatch();
 
-  const putData = async (putData, addUrl = "", invalidateQueryKeys = []) => {
+  const patchData = async (patchBody, addUrl = "", invalidateQueryKeys = []) => {
     setLoading(true);
     setError(null);
     setSuccess(false);
     setSuccessMessage("");
-    
+
     try {
-      const response = await privateAxios.put(url + addUrl, putData, {
+      const response = await privateAxios.patch(url + addUrl, patchBody, {
         onUploadProgress: (progressEvent) => {
           const prog = Math.round((progressEvent.loaded / progressEvent.total) * 100);
           setProgress(prog);
@@ -80,14 +80,14 @@ const useAxiosPut = (url) => {
     success,
     successMessage,
     responseData,
-    putData,
+    patchData,
   };
 };
 
-export default useAxiosPut;
+export default useAxiosPatch;
 
 
 
-// const { putData, loading, success } = useAxiosPut("products/update/");
-
-// await putData(updatedProduct, "123", [["fetchData", "/api/user"]]);
+// Example usage:
+// const { patchData, loading, success } = useAxiosPatch("products/update/");
+// await patchData({ price: 200 }, "123", [["fetchData", "/api/user"]]);
