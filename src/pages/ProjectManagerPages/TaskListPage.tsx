@@ -11,6 +11,7 @@ import { queryClient } from "@/main";
 import { useMutation } from "@tanstack/react-query";
 import { ClipboardList, Trash } from "lucide-react";
 import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
 export default function TasksListPage({ onSelectTask, onNavigate }) {
   const [taskToDelete, setTaskToDelete] = useState(null);
@@ -18,6 +19,7 @@ export default function TasksListPage({ onSelectTask, onNavigate }) {
   const deleteMutation = useMutation({
     mutationFn: deleteTask, // The function to call for deleting
     onSuccess: () => {
+      toast.success("Task Deleted Successfully");
       setTaskToDelete(null);
       queryClient.invalidateQueries({ queryKey: ["fetchData", "admin/tasks"] });
     },

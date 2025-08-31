@@ -9,13 +9,13 @@ export default function TasksPage({ setIsPageDirty, onNavigate }) {
   return (
     <div className="p-4 md:p-8">
       {/* Breadcrumb Navigation */}
-      <div className="flex items-center text-md  mb-5">
+      <div className="flex items-center text-md  mb-6 font-bold">
         <nav>
           <ol className="flex items-start">
             <li>
               <button
                 onClick={() => setSelectedTask(null)}
-                className={`font-medium ${
+                className={` ${
                   !selectedTask
                     ? "text-foreground text-3xl font-bold"
                     : "text-muted-foreground hover:text-foreground cursor-pointer text-3xl font-bold"
