@@ -1,4 +1,5 @@
 import AssignmentCard from "@/components/AssignmentCard";
+import AssignmentListEmpty from "@/components/AssignmentListEmpty";
 import FeedbackDialog from "@/components/FeedbackDialog";
 import Greeting from "@/components/Greeting";
 import TaskTextarea from "@/components/TaskTextarea";
@@ -173,7 +174,7 @@ export default function AssignTaskPage({ setIsPageDirty }) {
           },
         ]);
         setLoading(false);
-      }, 400);
+      }, 20);
     } else {
       console.log("taskData.task.id ==> ", taskData.task.id);
       setTimeout(() => {
@@ -183,7 +184,7 @@ export default function AssignTaskPage({ setIsPageDirty }) {
           prefilled_details: taskData.prefilled_details,
         });
         setLoading(false);
-      }, 1);
+      }, 20);
     }
   };
 
@@ -326,15 +327,19 @@ export default function AssignTaskPage({ setIsPageDirty }) {
               <p className="text-center text-muted-foreground mb-8">
                 Here are the generated sub-tasks and their assignments.
               </p>
-              <div className=" grid grid-cols-2 gap-6">
-                {assignment.map((assignment) => (
-                  <AssignmentCard
-                    onFeedbackClick={handleOpenFeedbackDialog}
-                    key={assignment.id}
-                    assignment={assignment}
-                  />
-                ))}
-              </div>
+              {assignment.length === 0 ? (
+                <AssignmentListEmpty />
+              ) : (
+                <div className=" grid grid-cols-2 gap-6">
+                  {assignment.map((assignment) => (
+                    <AssignmentCard
+                      onFeedbackClick={handleOpenFeedbackDialog}
+                      key={assignment.id}
+                      assignment={assignment}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
             <Button
               onClick={handleRestart}
