@@ -112,9 +112,31 @@ export default function SkillsPage({ setIsPageDirty }) {
 
   if (!isLoading && !error && (!data || data.length === 0)) {
     return (
-      <div className="flex  flex-col items-center justify-center ">
+      <div className="p-8">
+      <h1 className="text-3xl font-bold mb-6">Skills</h1>
+      <Card className="mb-4 p-3">
+        <CardContent className="p-0">
+          <div>
+            <form onSubmit={handleAddSkill} className="flex gap-4">
+              <Button size="icon">
+                <Plus className="size-6" />
+              </Button>
+              <Input
+                value={newSkillName}
+                className="bg-muted"
+                onChange={(e) => setNewSkillName(e.target.value)}
+              />
+            </form>
+          </div>
+        </CardContent>
+      </Card>
+      {!isLoading && (
+        <div className="flex  flex-col items-center justify-center ">
         <SkillsListEmpty />
       </div>
+      )}
+    </div>
+      
     );
   }
 

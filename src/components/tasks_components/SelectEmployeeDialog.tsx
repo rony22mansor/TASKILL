@@ -63,7 +63,7 @@ export default function SelectEmployeeDialog({
                 }`}
               >
                 <CardHeader className="flex flex-row items-center gap-4">
-                  <Avatar className="w-16 h-16 bg-primary rounded-full items-center justify-center flex text-3xl text-white">
+                  <Avatar className="w-16 h-16 bg-primary border-4 border-foreground/50 shadow-inner shadow-background/50 rounded-full items-center justify-center flex text-3xl text-white">
                     <AvatarImage src={emp.profile_image_url || ""} />
                     <AvatarFallback>{emp.name.charAt(0)}</AvatarFallback>
                   </Avatar>
