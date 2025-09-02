@@ -233,8 +233,12 @@ export default function TaskDetailsPage({ task }) {
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button
+                              disabled={
+                                subtask.status === "completed" ||
+                                subtask.status === "in_progress"
+                              }
                               size="icon"
-                              variant="secondary"
+                              variant="outline"
                               className="border-1 cursor-pointer"
                             >
                               <Ellipsis />
