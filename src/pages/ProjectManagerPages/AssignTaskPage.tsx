@@ -12,7 +12,7 @@ import {
 } from "@/lib/api/assignTaskApi";
 import { router } from "@/router";
 import { useMutation } from "@tanstack/react-query";
-import { AlertTriangle, Bot, ListRestart, Loader2, User } from "lucide-react";
+import { AlertTriangle, Goal, ListRestart, Loader2, User } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -244,7 +244,7 @@ export default function AssignTaskPage({ setIsPageDirty }) {
                 >
                   {msg.sender === "assistant" && (
                     <div className="w-12 h-12 rounded-tr-none  rounded-full bg-slate-300 dark:bg-slate-800 flex items-center justify-center flex-shrink-0">
-                      <Bot className="w-6 h-6 text-foreground dark:text-slate-50   " />
+                      <Goal className="w-6 h-6 text-foreground dark:text-slate-50   " />
                     </div>
                   )}
                   <div
@@ -268,7 +268,7 @@ export default function AssignTaskPage({ setIsPageDirty }) {
               {(createTaskMutation.isPending || loading) && (
                 <div className="flex items-start gap-4">
                   <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center flex-shrink-0">
-                    <Bot className="w-5 h-5 text-white" />
+                    <Goal className="w-5 h-5 text-white" />
                   </div>
                   <div className="max-w-md p-3 rounded-2xl bg-slate-200 dark:bg-slate-800">
                     <Loader2 className="w-5 h-5 animate-spin text-slate-500" />
@@ -278,7 +278,7 @@ export default function AssignTaskPage({ setIsPageDirty }) {
               {submitAnswersMutation.isPending && (
                 <div className="flex items-start gap-4">
                   <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center flex-shrink-0">
-                    <Bot className="w-5 h-5 text-white" />
+                    <Goal className="w-5 h-5 text-white" />
                   </div>
                   <div className="max-w-md p-3 rounded-2xl bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-slate-50 flex items-center gap-2">
                     <Loader2 className="w-5 h-5 animate-spin" />{" "}

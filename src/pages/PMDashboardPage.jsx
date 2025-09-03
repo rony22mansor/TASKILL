@@ -9,6 +9,16 @@ import {
   Goal,
   BrainCog,
   BrainCircuit,
+  Settings2,
+  Bold,
+  Italic,
+  Underline,
+  Moon,
+  Sun,
+  SunMoon,
+  Laptop,
+  Send,
+  SendHorizonal,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import AssignTaskPage from "./ProjectManagerPages/AssignTaskPage";
@@ -19,9 +29,19 @@ import DiscardDialog from "@/components/DiscardDialog";
 import Employee from "./Employee";
 import TasksPage from "./ProjectManagerPages/TasksPage";
 import SkillsPage from "./ProjectManagerPages/SkillsPage";
+import { Popover, PopoverTrigger } from "@/components/ui/popover";
+import { PopoverContent } from "@radix-ui/react-popover";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Label } from "@/components/ui/label";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ThemeToggleButton } from "@/components/ThemeToggleButton";
 
 export default function PMDashboardPage() {
-  const [activePage, setActivePage] = useState("Assign Task");
+  const [activePage, setActivePage] = useState("Assign");
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isAccountPopoverOpen, setIsAccountPopoverOpen] = useState(false);
   const [userInfo, setUserInfo] = useState({});
@@ -69,7 +89,7 @@ export default function PMDashboardPage() {
 
   const renderActivePage = () => {
     switch (activePage) {
-      case "Assign Task":
+      case "Assign":
         return <AssignTaskPage setIsPageDirty={setIsPageDirty} />;
       case "Tasks":
         return (
@@ -88,7 +108,7 @@ export default function PMDashboardPage() {
   };
 
   const navItems = [
-    { name: "Assign Task", icon: Home },
+    { name: "Assign", icon: SendHorizonal },
     { name: "Tasks", icon: ListChecks },
     { name: "Employees", icon: Users },
     { name: "Skills", icon: BrainCircuit },
@@ -116,14 +136,14 @@ export default function PMDashboardPage() {
             }`}
           >
             <div className="flex h-full max-h-screen flex-col">
-              <div className="flex h-14 items-center border-b px-3 lg:h-[60px] gap-2">
+              <div className="flex h-14 items-center  px-6 lg:h-[60px] gap-3">
                 <a
                   href="/"
                   className="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-50 overflow-hidden"
                 >
                   <Goal className="h-6 w-6 text-indigo-600 flex-shrink-0" />
                   <span
-                    className={`whitespace-nowrap transition-opacity ${
+                    className={`whitespace-nowrap transition-opacity font-brand text-2xl ${
                       isSidebarCollapsed ? "opacity-0" : "opacity-100"
                     }`}
                   >
@@ -148,26 +168,39 @@ export default function PMDashboardPage() {
                   ))}
                 </nav>
               </div>
-              <div className="mt-auto border-t border-gray-200 dark:border-gray-800 p-4 grid">
-                <NavButton
-                  item={{
-                    name: "Settings",
-                    icon: Settings,
-                  }}
-                  activePage={activePage}
-                  isSidebarCollapsed={isSidebarCollapsed}
-                  onNavigate={setActivePage}
-                />
+              <div className="mt-auto  p-4 grid">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      className={`w-full text-muted-foreground shadow-none flex items-center gap-3 px-3 py-2 bg-transparent transition-all hover:bg-primary/10 border-0 ${
+                        isSidebarCollapsed ? "justify-center" : "justify-start"
+                      }`}
+                    >
+                      <Settings2 className="h-5 w-5 flex-shrink-0" />
+                      <span
+                        className={`whitespace-nowrap ${
+                          isSidebarCollapsed ? "hidden" : "flex"
+                        }`}
+                      >
+                        Settings
+                      </span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="start"
+                    alignOffset={20}
+                    className="w-60 p-3"
+                  >
+                    <ThemeToggleButton />
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
           </div>
           {/* Contents */}
           <div className="flex flex-col h-screen">
             {/* AppBar */}
-            <header className="flex h-14 items-center gap-4 border-b bg-white dark:bg-gray-950 px-4 lg:h-[60px] lg:px-6 sticky top-0 z-10">
-              <div className="w-full flex-1">
-                {/* Header content like breadcrumbs or page title can go here */}
-              </div>
+            <header className="flex justify-end items-center gap-4  p-7 h-[70px]  sticky top-0 z-10">
               <div className="flex items-center gap-4">
                 {/* Notifications */}
                 {/* <button className="relative rounded-full p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800">
