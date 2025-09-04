@@ -4,10 +4,8 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import useAxiosGet from "@/Hooks/UseAxiosGet";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -32,6 +30,8 @@ import {
 } from "@/lib/api/employee_skills_api";
 import { queryClient } from "@/main";
 import { toast } from "react-toastify";
+import { Input } from "@/components/ui/input";
+import { editEmployeeInfo } from "@/lib/api/edit_employee_api";
 
 const EmployeeDetailsDialog = ({ open, onOpenChange, id }) => {
   const {
@@ -107,45 +107,165 @@ const EmployeeDetailsDialog = ({ open, onOpenChange, id }) => {
   );
 };
 
-const EmployeeInfo = ({ employee }) => (
-  <Card className="p-0 flex-shrink-0">
-    <CardContent className="p-0">
-      <div className="flex p-4 gap-4">
-        <Avatar className="  w-16 h-16  bg-primary border-4 border-foreground/50 shadow-inner shadow-background/50 rounded-full items-center justify-center flex text-3xl text-white ">
-          <AvatarImage src={employee.profile_image_url || ""} />
-          <AvatarFallback>{employee.name.charAt(0)}</AvatarFallback>
-        </Avatar>
-        <div className="space-y-2">
-          <p>
-            <strong>Name:</strong> {employee?.name}
-          </p>
-          <p>
-            <strong>Email:</strong> {employee?.email}
-          </p>
-          <p>
-            <strong>Status:</strong>{" "}
-            <Badge
-              variant="outline"
-              className={`${
-                employee?.status === "available"
-                  ? "dark:bg-green-900/80 bg-green-300/70"
-                  : "dark:bg-red-900/80 bg-red-300/70"
-              }`}
-            >
-              {employee?.status}
-            </Badge>
-          </p>
-          <p>
-            <strong>Task Capacity:</strong> {employee?.task_capacity}
-          </p>
-          <p>
-            <strong>Available Hours:</strong> {employee?.available_hours}
-          </p>
+const EmployeeInfo = ({ employee }) => {
+  const [isEdit, setIsEdit] = useState(false);
+  const [formData, setFormData] = useState({
+    available_hours: employee?.available_hours || "",
+    task_capacity: employee?.task_capacity || "",
+    status: employee?.status || "available",
+  });
+
+  useEffect(() => {
+    setFormData({
+      available_hours: employee?.available_hours || "",
+      task_capacity: employee?.task_capacity || "",
+      status: employee?.status || "available",
+    });
+  }, [employee]);
+
+  const editEmployeeInfoMutation = useMutation({
+    mutationFn: editEmployeeInfo,
+    onSuccess: (data) => {
+      setIsEdit(false);
+      toast.success("Employee Info Edited Successfully");
+      queryClient.invalidateQueries({
+        queryKey: ["info", employee.id],
+      });
+    },
+    onError: (error) => {
+      console.error("Failed to Edit Employee Info:", error);
+    },
+  });
+
+  const handleSave = () => {
+    // Make sure numbers are sent as numbers
+    const payload = {
+      ...formData,
+      available_hours: Number(formData.available_hours),
+      task_capacity: Number(formData.task_capacity),
+    };
+    console.log("payload ==> ", payload);
+    editEmployeeInfoMutation.mutate({ body: payload, employeeId: employee.id });
+  };
+
+  const handleCancel = () => {
+    setIsEdit(false);
+    // Reset form to original data
+    setFormData({
+      available_hours: employee?.available_hours,
+      task_capacity: employee?.task_capacity,
+      status: employee?.status,
+    });
+  };
+
+  return (
+    <Card className="p-0 flex-shrink-0">
+      <CardContent className="p-0">
+        <div className="flex p-4 gap-4 items-center">
+          <Avatar className="  w-16 h-16  bg-primary border-4 border-foreground/50 shadow-inner shadow-background/50 rounded-full items-center justify-center flex text-3xl text-white ">
+            <AvatarImage src={employee.profile_image_url || ""} />
+            <AvatarFallback>{employee.name.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <div className="flex-1 min-w-0">
+            <CardTitle className="truncate">{employee.name}</CardTitle>
+            <p className="text-sm text-gray-500 truncate">{employee.email}</p>
+          </div>
         </div>
-      </div>
-    </CardContent>
-  </Card>
-);
+        <div className="space-y-2 px-4">
+          <p>
+            📞 <span className="">{employee?.phone_number}</span>
+          </p>
+          <p>
+            📍 <span className="">{employee?.address}</span>
+          </p>
+          {isEdit ? (
+            <>
+              <div className="flex items-center gap-2">
+                <div className="text-nowrap w-2/3">🕒 Available Hours</div>
+                <Input
+                  value={formData.available_hours}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      available_hours: e.target.value,
+                    })
+                  }
+                  type="number"
+                  className="mt-1 "
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="text-nowrap w-2/3">📊 Task Capacity</div>
+                <Input
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      task_capacity: e.target.value,
+                    })
+                  }
+                  value={formData.task_capacity}
+                  type="number"
+                  className="mt-1 "
+                />
+              </div>
+              <div className="flex items-center gap-2 ">
+                <div className="text-nowrap w-2/3">✅ Status</div>
+                <Select
+                  value={formData.status}
+                  onValueChange={(val) =>
+                    setFormData({ ...formData, status: val })
+                  }
+                >
+                  <SelectTrigger className="mt-1 w-full">
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="available">Available</SelectItem>
+                    <SelectItem value="unavailable">Unavailable</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </>
+          ) : (
+            <>
+              <p>
+                🕒 Available Hours:{" "}
+                <span className="font-medium">{employee?.available_hours}</span>
+              </p>
+              <p>
+                📊 Task Capacity:{" "}
+                <span className="font-medium">{employee?.task_capacity}</span>
+              </p>
+              <p>
+                ✅ Status:{" "}
+                <span className="font-medium">{employee?.status}</span>
+              </p>
+            </>
+          )}
+        </div>
+        <div className="justify-items-end pb-4 pr-4 mt-4">
+          {isEdit ? (
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={handleCancel}>
+                Cancel
+              </Button>
+              <Button
+                disabled={editEmployeeInfo.isPending}
+                onClick={handleSave}
+              >
+                Save
+              </Button>
+            </div>
+          ) : (
+            <div className="flex">
+              <Button onClick={() => setIsEdit(true)}>Edit</Button>
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
 
 const Skills = ({ employeeId, initialSkills }) => {
   const [employeeSkills, setEmployeeSkills] = useState(initialSkills);

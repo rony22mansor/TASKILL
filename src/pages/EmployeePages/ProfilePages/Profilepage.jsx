@@ -36,12 +36,12 @@ const Profilepage = () => {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="flex justify-center my-10">
+    <div className="flex justify-center my-5">
       <Card className="w-full max-w-2xl shadow-lg rounded-2xl">
         <CardHeader>
           <CardTitle className="text-2xl font-bold">Profile</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-4">
           {/* Name */}
           <div className="space-y-2">
             <Label>Name</Label>

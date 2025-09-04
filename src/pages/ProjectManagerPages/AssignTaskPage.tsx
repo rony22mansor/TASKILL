@@ -109,6 +109,7 @@ export default function AssignTaskPage({ setIsPageDirty }) {
     onError: (err) => {
       setUiState("initial");
       setIsPageDirty(false);
+      setLoading(false);
       setMessages([]);
       console.error("Error creating task:", err);
     },

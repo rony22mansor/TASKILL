@@ -142,7 +142,7 @@ export default function EDashboardPage() {
         {/* Contents */}
         <div className="flex flex-col h-screen">
           {/* AppBar */}
-          <header className="flex justify-end items-center gap-4  p-7 h-[70px]  sticky top-0 z-10">
+          <header className="flex justify-end items-center gap-4  p-7 h-[40px]  sticky top-0 z-10">
             <div className="w-full flex-1">
               {/* Header content like breadcrumbs or page title can go here */}
             </div>

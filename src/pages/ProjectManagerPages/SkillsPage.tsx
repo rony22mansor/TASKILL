@@ -110,33 +110,47 @@ export default function SkillsPage({ setIsPageDirty }) {
     }
   };
 
+  const handelChangeInput = (e) => {
+    setNewSkillName(e.target.value);
+  };
+
+  const filteredAndSortedSkills = data
+    ? [...data] // Create a shallow copy to avoid mutating the original array
+        .reverse() // Reverse the array to show the newest items first
+        .filter(
+          (
+            skill // Filter based on the input, case-insensitively
+          ) =>
+            skill.name.toLowerCase().includes(newSkillName.toLowerCase().trim())
+        )
+    : [];
+
   if (!isLoading && !error && (!data || data.length === 0)) {
     return (
       <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">Skills</h1>
-      <Card className="mb-4 p-3">
-        <CardContent className="p-0">
-          <div>
-            <form onSubmit={handleAddSkill} className="flex gap-4">
-              <Button size="icon">
-                <Plus className="size-6" />
-              </Button>
-              <Input
-                value={newSkillName}
-                className="bg-muted"
-                onChange={(e) => setNewSkillName(e.target.value)}
-              />
-            </form>
+        <h1 className="text-3xl font-bold mb-6">Skills</h1>
+        <Card className="mb-4 p-3">
+          <CardContent className="p-0">
+            <div>
+              <form onSubmit={handleAddSkill} className="flex gap-4">
+                <Button size="icon">
+                  <Plus className="size-6" />
+                </Button>
+                <Input
+                  value={newSkillName}
+                  className="bg-muted"
+                  onChange={(e) => setNewSkillName(e.target.value)}
+                />
+              </form>
+            </div>
+          </CardContent>
+        </Card>
+        {!isLoading && (
+          <div className="flex  flex-col items-center justify-center ">
+            <SkillsListEmpty />
           </div>
-        </CardContent>
-      </Card>
-      {!isLoading && (
-        <div className="flex  flex-col items-center justify-center ">
-        <SkillsListEmpty />
+        )}
       </div>
-      )}
-    </div>
-      
     );
   }
 
@@ -156,7 +170,7 @@ export default function SkillsPage({ setIsPageDirty }) {
               <Input
                 value={newSkillName}
                 className="bg-muted"
-                onChange={(e) => setNewSkillName(e.target.value)}
+                onChange={handelChangeInput}
               />
             </form>
           </div>
@@ -164,7 +178,7 @@ export default function SkillsPage({ setIsPageDirty }) {
       </Card>
       {!isLoading && (
         <div className="flex flex-wrap gap-3">
-          {data.map((skill) => (
+          {filteredAndSortedSkills.map((skill) => (
             <ContextMenu>
               <ContextMenuTrigger>
                 <Card key={skill.id} className="p-0 select-none cursor-pointer">
