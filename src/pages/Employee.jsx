@@ -1,8 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -15,19 +16,26 @@ import {
 import EmployeeDetailsDialog from "./EmployeeDetailsDialog";
 import useAxiosGet from "@/Hooks/UseAxiosGet";
 import useAxiosPut from "@/Hooks/UseAxiosPut";
+import EmployeesListEmpty from "@/components/employee_components/EmployeesListEmpty";
+import { queryClient } from "@/main";
 
 const Employee = () => {
-  const [employees, setEmployees] = useState([]);
   const [editId, setEditId] = useState(null);
   const [formData, setFormData] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
-  const { data } = useAxiosGet("admin/employees");
-  const { putData } = useAxiosPut("admin/employees/");
+  const { data, loading: isLoading, error } = useAxiosGet("admin/employees");
+  const { putData, success } = useAxiosPut("admin/employees/");
 
   useEffect(() => {
-    setEmployees(data);
-  }, [data]);
+    queryClient.invalidateQueries({
+      queryKey: ["fetchData", "admin/employees"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["fetchData", `admin/employees/${selectedEmployee}`],
+    });
+  }, [success, selectedEmployee]);
+
   const handleEdit = (emp) => {
     setEditId(emp.id);
     setFormData({
@@ -48,29 +56,46 @@ const Employee = () => {
     setDialogOpen(true);
   };
 
+  console.log("isLoading ==> ", isLoading);
+  if (isLoading) {
+    return <h1>Loading ...</h1>;
+  }
+
+  if (!isLoading && !error && (!data || data.length === 0)) {
+    return (
+      <div className="flex h-full flex-col items-center justify-center ">
+        <EmployeesListEmpty />
+      </div>
+    );
+  }
+
   return (
     <div className="p-8">
       <h1 className="text-3xl font-bold mb-6">Employees</h1>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {employees?.map((emp) => (
+        {data?.map((emp) => (
           <Card key={emp?.id} className="shadow-md hover:shadow-lg transition">
             <CardHeader className="flex flex-row items-center gap-4">
-              <Avatar className="w-16 h-16">
-                <AvatarImage src={emp?.profile_image_url || ""} />
-                <AvatarFallback>{emp?.name.charAt(0)}</AvatarFallback>
+              <Avatar className="w-16 h-16 flex-shrink-0 bg-primary border-4 border-foreground/50 shadow-inner shadow-background/50 rounded-full items-center justify-center flex text-3xl text-white">
+                <AvatarImage src={emp.profile_image_url || ""} />
+                <AvatarFallback>{emp.name.charAt(0)}</AvatarFallback>
               </Avatar>
-              <div>
-                <CardTitle>{emp?.name}</CardTitle>
-                <p className="text-sm text-gray-500">{emp?.email}</p>
+
+              {/* 👇 ADD flex-1 and min-w-0 HERE */}
+              <div className="flex-1 min-w-0">
+                {/* 👇 ADD truncate HERE */}
+                <CardTitle className="truncate">{emp.name}</CardTitle>
+                {/* 👇 AND ADD truncate HERE */}
+                <p className="text-sm text-gray-500 truncate">{emp.email}</p>
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
               <p>
-                📞 <span className="text-gray-700">{emp?.phone_number}</span>
+                📞 <span className="">{emp?.phone_number}</span>
               </p>
               <p>
-                📍 <span className="text-gray-700">{emp?.address}</span>
+                📍 <span className="">{emp?.address}</span>
               </p>
 
               {editId === emp?.id ? (
@@ -107,17 +132,17 @@ const Employee = () => {
                   <div>
                     ✅ Status:
                     <Select
-                      value={formData.status ?? "Active"}
+                      value={formData.status ?? "available"}
                       onValueChange={(val) =>
                         setFormData({ ...formData, status: val })
                       }
                     >
-                      <SelectTrigger className="mt-1">
+                      <SelectTrigger className="mt-1 w-full">
                         <SelectValue placeholder="Select status" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Active">available</SelectItem>
-                        <SelectItem value="Inactive">unavailable</SelectItem>
+                        <SelectItem value="available">Available</SelectItem>
+                        <SelectItem value="unavailable">Unavailable</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -140,7 +165,7 @@ const Employee = () => {
                 </>
               )}
 
-              <div>
+              {/* <div>
                 <p className="mb-1">Skills:</p>
                 <div className="flex flex-wrap gap-2">
                   {emp?.skills?.map((skill) => (
@@ -149,7 +174,7 @@ const Employee = () => {
                     </Badge>
                   ))}
                 </div>
-              </div>
+              </div> */}
 
               {/* Action buttons */}
               <div className="flex justify-end gap-2 pt-4">

@@ -1,4 +1,5 @@
 import AssignmentCard from "@/components/AssignmentCard";
+import AssignmentListEmpty from "@/components/AssignmentListEmpty";
 import FeedbackDialog from "@/components/FeedbackDialog";
 import Greeting from "@/components/Greeting";
 import TaskTextarea from "@/components/TaskTextarea";
@@ -11,7 +12,7 @@ import {
 } from "@/lib/api/assignTaskApi";
 import { router } from "@/router";
 import { useMutation } from "@tanstack/react-query";
-import { AlertTriangle, Bot, ListRestart, Loader2, User } from "lucide-react";
+import { AlertTriangle, Goal, ListRestart, Loader2, User } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -173,7 +174,7 @@ export default function AssignTaskPage({ setIsPageDirty }) {
           },
         ]);
         setLoading(false);
-      }, 400);
+      }, 20);
     } else {
       console.log("taskData.task.id ==> ", taskData.task.id);
       setTimeout(() => {
@@ -183,7 +184,7 @@ export default function AssignTaskPage({ setIsPageDirty }) {
           prefilled_details: taskData.prefilled_details,
         });
         setLoading(false);
-      }, 1);
+      }, 20);
     }
   };
 
@@ -243,7 +244,7 @@ export default function AssignTaskPage({ setIsPageDirty }) {
                 >
                   {msg.sender === "assistant" && (
                     <div className="w-12 h-12 rounded-tr-none  rounded-full bg-slate-300 dark:bg-slate-800 flex items-center justify-center flex-shrink-0">
-                      <Bot className="w-6 h-6 text-foreground dark:text-slate-50   " />
+                      <Goal className="w-6 h-6 text-foreground dark:text-slate-50   " />
                     </div>
                   )}
                   <div
@@ -267,7 +268,7 @@ export default function AssignTaskPage({ setIsPageDirty }) {
               {(createTaskMutation.isPending || loading) && (
                 <div className="flex items-start gap-4">
                   <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center flex-shrink-0">
-                    <Bot className="w-5 h-5 text-white" />
+                    <Goal className="w-5 h-5 text-white" />
                   </div>
                   <div className="max-w-md p-3 rounded-2xl bg-slate-200 dark:bg-slate-800">
                     <Loader2 className="w-5 h-5 animate-spin text-slate-500" />
@@ -277,7 +278,7 @@ export default function AssignTaskPage({ setIsPageDirty }) {
               {submitAnswersMutation.isPending && (
                 <div className="flex items-start gap-4">
                   <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center flex-shrink-0">
-                    <Bot className="w-5 h-5 text-white" />
+                    <Goal className="w-5 h-5 text-white" />
                   </div>
                   <div className="max-w-md p-3 rounded-2xl bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-slate-50 flex items-center gap-2">
                     <Loader2 className="w-5 h-5 animate-spin" />{" "}
@@ -326,15 +327,19 @@ export default function AssignTaskPage({ setIsPageDirty }) {
               <p className="text-center text-muted-foreground mb-8">
                 Here are the generated sub-tasks and their assignments.
               </p>
-              <div className=" grid grid-cols-2 gap-6">
-                {assignment.map((assignment) => (
-                  <AssignmentCard
-                    onFeedbackClick={handleOpenFeedbackDialog}
-                    key={assignment.id}
-                    assignment={assignment}
-                  />
-                ))}
-              </div>
+              {assignment.length === 0 ? (
+                <AssignmentListEmpty />
+              ) : (
+                <div className=" grid grid-cols-2 gap-6">
+                  {assignment.map((assignment) => (
+                    <AssignmentCard
+                      onFeedbackClick={handleOpenFeedbackDialog}
+                      key={assignment.id}
+                      assignment={assignment}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
             <Button
               onClick={handleRestart}
