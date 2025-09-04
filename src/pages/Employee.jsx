@@ -116,9 +116,8 @@ const Employee = () => {
                         <SelectValue placeholder="Select status" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Active">Active</SelectItem>
-                        <SelectItem value="Inactive">Inactive</SelectItem>
-                        <SelectItem value="On Leave">On Leave</SelectItem>
+                        <SelectItem value="Active">available</SelectItem>
+                        <SelectItem value="Inactive">unavailable</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
