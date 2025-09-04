@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 // import { useDispatch } from "react-redux";
 // import { showSnackbar } from "../store/snackbarSlice";
+import { toast } from "react-toastify";
 
 const useAxiosPut = (url) => {
   const [data, setData] = useState(null);
@@ -36,6 +37,8 @@ const useAxiosPut = (url) => {
       setResponseData(response);
       setSuccess(true);
       setSuccessMessage(response.data.message);
+      
+      toast.success(response.data.message);
 
       // if (location.pathname.split("/")[1] !== "NotificationsAndReports") {
       //   dispatch(showSnackbar({ message: response.data.message, severity: "success" }));
@@ -49,7 +52,7 @@ const useAxiosPut = (url) => {
       return response;
     } catch (err) {
       console.error(err);
-
+      
       const errorMessage = () => {
         if (err.response && err.response.data?.errors) {
           return Object.values(err.response.data.errors).join("\n");
@@ -59,6 +62,7 @@ const useAxiosPut = (url) => {
           return "حدث خطأ أثناء التحديث.";
         }
       };
+      toast.error(errorMessage);
 
       setError(err);
 

@@ -3,44 +3,67 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useAxiosGet from "@/Hooks/UseAxiosGet";
 import useAxiosPut from "@/Hooks/UseAxiosPut";
 
 const TasksPage = () => {
-  const { data, loading } = useAxiosGet("employee/tasks");
+  const [statusFilter, setStatusFilter] = useState("pending");
+  const { data, loading } = useAxiosGet(
+    `employee/tasks?status=${statusFilter}`
+  );
   const { putData } = useAxiosPut("employee/tasks/subtasks");
-  const [tasks, setTasks] = useState(data);
+  const [tasks, setTasks] = useState([]);
+
   useEffect(() => {
     setTasks(data);
   }, [data]);
 
-  const markDone = (taskId, subtaskId) => {
-    console.log(subtaskId);
-    putData(
-      {
-        status: "completed",
-      },
-      `/${subtaskId}/status`,
-      [["fetchData", "/employee/tasks"]]
-    );
-    setTasks((prev) =>
-      prev.map((t) =>
-        t.parent_task.id === taskId
-          ? {
-              ...t,
-              assigned_subtasks: t.assigned_subtasks.map((s) =>
-                s.id === subtaskId ? { ...s, status: "completed" } : s
-              ),
-            }
-          : t
-      )
-    );
+  const markDone = (taskId, subtask) => {
+    let newStatus = subtask.status === "pending" ? "in_progress" : "completed";
+
+    putData({ status: newStatus }, `/${subtask.id}/status`, [
+      ["fetchData", `/employee/tasks?status=${statusFilter}`],
+    ]).then((response) => {
+      if (response.status == 200) {
+        setStatusFilter(newStatus);
+      }
+    });
   };
-  if (loading) <h1>loading...</h1>;
+
+  if (loading) return <h1 className="p-6">Loading...</h1>;
+
   return (
     <div className="p-6 space-y-6">
+      {/* Nicer Tabs */}
+      <Tabs value={statusFilter} onValueChange={setStatusFilter}>
+        <TabsList className="grid grid-cols-3 w-full max-w-md mx-auto mb-6 bg-gray-100 rounded-xl p-1">
+          <TabsTrigger
+            value="pending"
+            className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-black transition"
+          >
+            ⏳ Pending
+          </TabsTrigger>
+          <TabsTrigger
+            value="in_progress"
+            className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-black transition"
+          >
+            🚀 In Progress
+          </TabsTrigger>
+          <TabsTrigger
+            value="completed"
+            className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-black transition"
+          >
+            ✅ Completed
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
+
       {tasks?.map((task) => (
-        <Card key={task.parent_task.id} className="shadow-md">
+        <Card
+          key={task.parent_task.id}
+          className="shadow-md hover:shadow-lg transition"
+        >
           <CardHeader>
             <CardTitle>{task.parent_task.description}</CardTitle>
           </CardHeader>
@@ -49,7 +72,7 @@ const TasksPage = () => {
               {task.assigned_subtasks.map((subtask) => (
                 <div
                   key={subtask.id}
-                  className="flex items-center gap-3 p-3 rounded-lg border"
+                  className="flex items-center gap-3 p-3 rounded-lg border hover:bg-gray-50 transition"
                 >
                   <Checkbox checked={subtask.status === "completed"} />
                   <Input
@@ -61,13 +84,14 @@ const TasksPage = () => {
                     }
                     disabled={subtask.status === "completed"}
                   />
-                  {subtask.status === "pending" && (
+                  {subtask.status !== "completed" && (
                     <Button
-                      // variant=""
                       size="sm"
-                      onClick={() => markDone(task.parent_task.id, subtask.id)}
+                      onClick={() => markDone(task.parent_task.id, subtask)}
                     >
-                      Mark Done
+                      {subtask.status === "pending"
+                        ? "Start Task"
+                        : "Mark Completed"}
                     </Button>
                   )}
                 </div>
