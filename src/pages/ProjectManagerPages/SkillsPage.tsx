@@ -15,6 +15,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { addSkill, deleteSkill, updateSkill } from "@/lib/api/skills_api";
 import { queryClient } from "@/main";
+import SkillLoading from "@/components/skills_components/SkillLoading";
 
 export default function SkillsPage({ setIsPageDirty }) {
   const [newSkillName, setNewSkillName] = useState("");
@@ -125,6 +126,39 @@ export default function SkillsPage({ setIsPageDirty }) {
         )
     : [];
 
+  if (isLoading) {
+    return (
+      <div className="p-8">
+        <h1 className="text-3xl font-bold mb-6">Skills</h1>
+        <Card className="mb-4 p-3 shadow-none border-0">
+          <CardContent className="p-0">
+            <div>
+              <form className="flex gap-4">
+                <Button disabled size="icon">
+                  <Plus className="size-6" />
+                </Button>
+                <Input
+                  autoComplete="off"
+                  type="text"
+                  disabled
+                  className="bg-muted"
+                />
+              </form>
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="flex flex-wrap gap-3">
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].map(
+            (e, i) => (
+              <SkillLoading i={i} />
+            )
+          )}
+        </div>
+      </div>
+    );
+  }
+
   if (!isLoading && !error && (!data || data.length === 0)) {
     return (
       <div className="p-8">
@@ -137,6 +171,9 @@ export default function SkillsPage({ setIsPageDirty }) {
                   <Plus className="size-6" />
                 </Button>
                 <Input
+                  aria-autocomplete="none"
+                  autoComplete="none"
+                  type="text"
                   value={newSkillName}
                   className="bg-muted"
                   onChange={(e) => setNewSkillName(e.target.value)}

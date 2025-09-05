@@ -3,7 +3,7 @@ import React from "react";
 import { Card, CardContent } from "../ui/card";
 import useAxiosDelete from "@/Hooks/UseAxiosDelete";
 
-export default function TaskCard({ task, onSelectTask, index, refetch }) {
+export default function TaskCard({ task, onSelectTask, index }) {
   return (
     <Card
       onClick={() => onSelectTask(task)}

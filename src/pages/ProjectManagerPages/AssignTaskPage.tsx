@@ -37,9 +37,11 @@ interface SubmitAnswersResponse {
 }
 
 const exampleTasks = [
-  "Build an e-commerce website with Laravel and Vue.js.",
-  "Develop a mobile app for online ordering.",
-  "Create a dashboard for visualizing sales data.",
+  "Building a website using Laravel and React. The site must include real-time notifications using WebSocket and connect to a MySQL database. The design should be fully responsive and Mobile-First, with a focus on user experience on mobile devices.",
+
+  "Starting a web application using Next.js. The authentication will be (email/password) with email verification logic, We need the Database to be designed using MongoDB and implementing ACID Transactions. Also it will be hosted on Azure.",
+
+  "Building a mobile-first application using React Native for daily workout with a monthly subscription using Stripe, It will have in-app alerts for showing the progress of the training.",
 ];
 
 export default function AssignTaskPage({ setIsPageDirty }) {

@@ -46,8 +46,8 @@ export default function TasksListPage({ onSelectTask, onNavigate }) {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-3">
-        {[1, 2, 3, 4].map((e, index) => (
+      <div className="flex flex-col gap-4">
+        {[1, 2, 3, 4, 5, 6, 7].map((e, index) => (
           <TaskSkeleton key={index} />
         ))}
       </div>
@@ -84,12 +84,7 @@ export default function TasksListPage({ onSelectTask, onNavigate }) {
             >
               <Trash />
             </Card>
-            <TaskCard
-              refetch={refetch}
-              onSelectTask={onSelectTask}
-              task={task}
-              index={index}
-            />
+            <TaskCard onSelectTask={onSelectTask} task={task} index={index} />
           </div>
         ))}
       </div>

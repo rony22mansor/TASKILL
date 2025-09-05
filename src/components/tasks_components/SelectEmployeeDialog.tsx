@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import useAxiosGet from "@/Hooks/UseAxiosGet";
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
+import SelectEmployeeDialogLoading from "./SelectEmployeeDialogLoading";
 
 export default function SelectEmployeeDialog({
   isOpen,
@@ -18,14 +19,11 @@ export default function SelectEmployeeDialog({
   const { data, error, loading, isEmpty } = useAxiosGet("admin/employees");
 
   if (loading) {
-    // You might want a better loading state, like a spinner in the dialog
     return (
-      <>
-        <div className="fixed inset-0 z-50 bg-black/80" />
-        <div className="fixed top-8 bottom-8 left-1/2 z-50 flex w-full max-w-5xl -translate-x-1/2 items-center justify-center border bg-background p-6 shadow-lg sm:rounded-lg">
-          <p>Loading employees...</p>
-        </div>
-      </>
+      <SelectEmployeeDialogLoading
+        description={description}
+        onClose={onClose}
+      />
     );
   }
 

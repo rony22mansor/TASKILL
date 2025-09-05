@@ -18,6 +18,7 @@ import useAxiosGet from "@/Hooks/UseAxiosGet";
 import useAxiosPut from "@/Hooks/UseAxiosPut";
 import EmployeesListEmpty from "@/components/employee_components/EmployeesListEmpty";
 import { queryClient } from "@/main";
+import EmployeeCardLoading from "@/components/employee_components/EmployeeCardLoading";
 
 const Employee = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -38,7 +39,26 @@ const Employee = () => {
   };
 
   if (isLoading) {
-    return <h1>Loading ...</h1>;
+    return (
+      <div className="p-8">
+        <h1 className="text-3xl font-bold mb-6">Employees</h1>
+
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {[1, , 2, 3, 4, 5, 6, 7, 8, 9, 10]?.map((e, i) => (
+            <EmployeeCardLoading key={i} />
+          ))}
+        </div>
+
+        {/* Details Dialog */}
+        {selectedEmployeeId && (
+          <EmployeeDetailsDialog
+            open={dialogOpen}
+            onOpenChange={setDialogOpen}
+            id={selectedEmployeeId}
+          />
+        )}
+      </div>
+    );
   }
 
   if (!isLoading && !error && (!data || data.length === 0)) {
